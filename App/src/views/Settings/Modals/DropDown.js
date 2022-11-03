@@ -3,7 +3,7 @@ import {Text, View, FlatList, Pressable, StyleSheet} from "react-native";
 import {Icon} from "react-native-elements";
 import DepartmentSelection from "./DepartmentSelection";
 
-const DropDown = ({header, selected, setSelected, data}) => {
+const DropDown = ({selected, setSelected, data}) => {
     
     const [dropdownOpen, setDropDownOpen] = useState(false);
 
@@ -15,7 +15,7 @@ const DropDown = ({header, selected, setSelected, data}) => {
         <>
         <View style={styles.dropDownBox}>
             <Pressable onPress={dropDownPressHandler} style={styles.dropDownButton}>
-                <Text style={styles.headerText}>{!selected ? header : selected}</Text>
+                <Text style={styles.headerText}>{!selected ? "Select Option" : selected}</Text>
                 {dropdownOpen ? <Icon type="font-awesome" name="angle-up" style={styles.icon}/> : <Icon type="font-awesome" name="angle-down" style={styles.icon}/>}
             </Pressable>
         </View>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         overflow: "hidden",
         marginBottom: 10,
-        zIndex: 3
+        zIndex: 3,
     },
     dropDownButton: {
         flexDirection: "row",

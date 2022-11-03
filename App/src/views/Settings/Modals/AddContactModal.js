@@ -1,19 +1,29 @@
-import { useState } from "react";
-import { StyleSheet, Modal, View, TextInput, Text, Pressable} from "react-native";
+import { useState, useReducer } from "react";
+import { formReducer, formInitialState} from "./Reducers/formReducer";
+import { StyleSheet, Modal, View, Text} from "react-native";
 import DropDown from "./DropDown";
+import InputField from "./InputField";
+import ModalButton from "./ModalButton";
 import { DEPARTMENTS } from "../../../constants/constants";
 
 const AddContactModal = ({isVisible, setIsVisible}) => {
-    const [selected, setSelected] = useState("");
-    
+    const [state, dispatch] = useReducer(formReducer, formInitialState);
+
     const hideModalHandler = () => {
         setIsVisible(false);
-        setSelected("");
+        dispatch({type: "RESET_FORM"})
     }
 
     const submitModalHandler = () => {
         setIsVisible(false);
-        setSelected("");
+    }
+
+    const textChangeHandler = (field, text) => {
+        dispatch({type: "CHANGE_INPUT", payload: {name: field, value: text}});
+    }
+
+    const changeDepartmentHandler = (department) => {
+        dispatch({type: "CHANGE_INPUT", payload: {name: "department", value: department}})
     }
     
     return (
@@ -23,37 +33,70 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
                     <View style={styles.headerContainer}>
                         <Text style={styles.formHeader}>Add New Contact</Text>
                     </View>
-                    <View style={styles.field}>
-                        <Text style={styles.fieldText}>First Name: </Text>
-                        <View style={styles.inputContainer}>
-                            <TextInput style={styles.input}/>
+                    <InputField 
+                    fieldName="First Name" 
+                    value={state.firstName.value}
+                    textChangeHandler={textChangeHandler.bind(this, "firstName")}
+                    />
+                    <InputField 
+                    fieldName="Last Name" 
+                    value={state.lastName.value}
+                    textChangeHandler={textChangeHandler.bind(this, "lastName")}
+                    />
+                    <View style={styles.dropDownContainer}>
+                        <Text style={styles.fieldText}>Department: </Text>
+                        <View style={{flex: 1}}>
+                            <DropDown
+                            header="Department"
+                            data={DEPARTMENTS}
+                            setSelected={changeDepartmentHandler}
+                            selected={state.department.value}
+                            />
                         </View>
                     </View>
-                    <View style={styles.field}>
-                        <Text style={styles.fieldText}>Last Name: </Text>
-                        <View style={styles.inputContainer}>
-                            <TextInput style={styles.input}/>
-                        </View>
-                    </View>
-                    <View>
-                        <DropDown
-                        header="Department"
-                        data={DEPARTMENTS}
-                        setSelected={setSelected}
-                        selected={selected}
-                        />
-                    </View>
+                    <InputField 
+                    fieldName="Phone No" 
+                    keyboardType="number-pad"
+                    value={state.phone.value}
+                    textChangeHandler={textChangeHandler.bind(this, "phone")}
+                    />
+                    <InputField 
+                    fieldName="Street" 
+                    value={state.street.value}
+                    textChangeHandler={textChangeHandler.bind(this, "street")}
+                    />
+                    <InputField 
+                    fieldName="Suburb" 
+                    value={state.suburb.value}
+                    textChangeHandler={textChangeHandler.bind(this, "suburb")}
+                    />
+                    <InputField 
+                    fieldName="State" 
+                    value={state.state.value}
+                    textChangeHandler={textChangeHandler.bind(this, "state")}
+                    />
+                    <InputField 
+                    fieldName="Post Code" 
+                    keyboardType="number-pad"
+                    value={state.postCode.value}
+                    textChangeHandler={textChangeHandler.bind(this, "postCode")}
+                    />
+                    <InputField 
+                    fieldName="Country" 
+                    value={state.country.value}
+                    textChangeHandler={textChangeHandler.bind(this, "country")}
+                    />
                     <View style={styles.btnContainer}>
-                        <Pressable onPress={submitModalHandler}>
-                            <View style={[styles.btn, styles.submit]}>
-                                <Text style={styles.btnText}>Submit</Text>
-                            </View>
-                        </Pressable>
-                        <View style={[styles.btn, styles.cancel]}>
-                            <Pressable onPress={hideModalHandler} android_ripple={{color: "#d9d9d9"}}>
-                                <Text style={styles.btnText}>Cancel</Text>
-                            </Pressable>   
-                        </View>
+                        <ModalButton 
+                        pressHandler={submitModalHandler} 
+                        buttonText="Submit" 
+                        style={styles.submit}
+                        />
+                        <ModalButton 
+                        pressHandler={hideModalHandler} 
+                        buttonText="Cancel" 
+                        style={styles.cancel}
+                        />
                     </View>
                 </View>  
             </View>
@@ -87,27 +130,12 @@ const styles= StyleSheet.create({
     },
     fieldText: {
         fontSize: 20,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginBottom: 10
     },
-    field: {
+    dropDownContainer : {
         flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    inputContainer: {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-        maxWidth: 180,
-    },
-    input: {
-        padding: 5,
-        textAlign: "center",
-        borderRadius: 20,
-        borderWidth: 1,
-        flex: 2,
-        fontSize: 15
+        alignItems: "center"
     },
     btnContainer: {
         alignItems: "center",
