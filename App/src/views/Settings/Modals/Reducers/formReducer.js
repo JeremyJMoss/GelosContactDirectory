@@ -46,7 +46,8 @@ export const formReducer = (state, action) => {
                 ...state,
                 [field]: {
                     ...fieldObject,
-                    value: action.payload.value
+                    value: action.payload.value,
+                    hasError: action.payload.value === ""
                 }
             }
         case "RESET_FORM":

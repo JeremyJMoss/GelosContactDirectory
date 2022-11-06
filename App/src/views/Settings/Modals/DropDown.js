@@ -1,9 +1,9 @@
 import { useState } from "react";
-import {Text, View, FlatList, Pressable, StyleSheet} from "react-native";
+import {Text, View, Pressable, StyleSheet, ScrollView} from "react-native";
 import {Icon} from "react-native-elements";
-import DepartmentSelection from "./DepartmentSelection";
+import Selection from "./Selection";
 
-const DropDown = ({selected, setSelected, data}) => {
+const DropDown = ({selected, data, setSelected, hasError, hasSubmitted}) => {
     
     const [dropdownOpen, setDropDownOpen] = useState(false);
 
@@ -13,27 +13,25 @@ const DropDown = ({selected, setSelected, data}) => {
 
     return (
         <>
-        <View style={styles.dropDownBox}>
+        <View style={[styles.dropDownBox, hasError && hasSubmitted ? styles.errorField : null]}>
             <Pressable onPress={dropDownPressHandler} style={styles.dropDownButton}>
-                <Text style={styles.headerText}>{!selected ? "Select Option" : selected}</Text>
+                <Text style={[styles.headerText, hasError && hasSubmitted ? styles.errorText : null]}>{!selected ? "Select Option" : selected}</Text>
                 {dropdownOpen ? <Icon type="font-awesome" name="angle-up" style={styles.icon}/> : <Icon type="font-awesome" name="angle-down" style={styles.icon}/>}
             </Pressable>
         </View>
         {dropdownOpen && <View style={styles.dropDown}>
-            <FlatList
-            data={data}
-            renderItem={(department) => {
+            <ScrollView>
+            {data.map((item) => {
                 return (
-                    <DepartmentSelection
-                    department={department.item}
+                    <Selection
+                    selection={item}
                     setSelected={setSelected}
                     setDropDownOpen={setDropDownOpen}
+                    key={item}
                     />
                 )
-            }}
-            keyExtractor={(department) => {
-                return department;
-            }}/>
+            })}
+            </ScrollView>
         </View>}
         </>
 
@@ -67,6 +65,13 @@ const styles = StyleSheet.create({
         borderTopEndRadius: 20,
         backgroundColor: "#ffffff",
         zIndex: 2
+    },
+    errorText: {
+        color: "#941a1d"
+    },
+    errorField: {
+        borderWidth: 3,
+        borderColor: "#941a1d"
     }
 })
 

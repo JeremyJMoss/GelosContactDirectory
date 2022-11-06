@@ -1,6 +1,7 @@
 import { Pressable, Text, View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { DEPARTMENTS } from "../../constants/constants";
+import { Icon } from "react-native-elements";
 
 const Contact = ({contactInfo}) => {
     const [detailsOpen, setDetailsOpen] = useState(false);
@@ -16,7 +17,10 @@ const Contact = ({contactInfo}) => {
     return (
             <View style={styles.contact}>
                 <Pressable style={styles.btnView} onPress={pressHandler} android_ripple={{color: "#eeeeee", borderless: true}}>
-                    <Text style={styles.contactText}>{contactInfo.name}</Text>
+                    <View style={styles.contactNameContainer}>
+                        <Text style={styles.contactText}>{contactInfo.name}</Text>
+                        {detailsOpen ? <Icon type="font-awesome" name="angle-up" style={styles.icon}/> : <Icon type="font-awesome" name="angle-down" style={styles.icon}/>}
+                    </View>
                     {detailsOpen && 
                        <>
                         <View style={styles.topInfoContainer}>
@@ -96,6 +100,10 @@ const styles = StyleSheet.create({
     },
     info: {
         marginTop: 5
+    },
+    contactNameContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between"
     }
 })
 

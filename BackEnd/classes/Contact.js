@@ -11,6 +11,10 @@ class Contact{
         this.country = country;
     }
 
+    toString() {
+        const joiningArray = [this.id, this.name, this.phoneNumber, this.department, this.street, this.suburb, this.state, this.postCode, this.country];
+        return joiningArray.join(","); 
+    }
 }
 
 module.exports = Contact;

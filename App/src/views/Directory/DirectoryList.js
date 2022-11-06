@@ -1,24 +1,27 @@
 import { FlatList, StyleSheet, View, Text, Pressable } from "react-native";
 import { useSelector, useDispatch} from 'react-redux';
+import { useCallback } from "react";
 import { contactActions } from "../../../store/contacts";
-import { useEffect} from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import Contact from "./Contact";
+import useHttp from "../../hooks/usehttp";
 
 const DirectoryList = ({searchQuery}) => {
     const dispatch = useDispatch();
     const contacts = useSelector(state => state.contacts.contacts);
-    const isLoading = useSelector(state => state.contacts.isLoading);
-    
+    const {isLoading, error, sendRequest} = useHttp(); 
 
-    useEffect(() => {
-        dispatch(contactActions.loading());
-        fetch("http://192.168.1.93:5000/contacts")
-        .then(response => response.json())
-        .then(contactData => {
-            dispatch(contactActions.setContacts(contactData));
-            dispatch(contactActions.notLoading());
+    useFocusEffect(useCallback(() => {
+        retrieveContacts();
+    }, [retrieveContacts]))
+
+    const retrieveContacts = () => {
+        sendRequest({
+            url: "http://192.168.1.93:5000/contacts"
+        }, (data) => {
+            dispatch(contactActions.setContacts(data));
         })
-    }, [dispatch, contactActions])
+    }
 
     
 
@@ -27,12 +30,24 @@ const DirectoryList = ({searchQuery}) => {
         if (isLoading){
            listContent = <Text>Loading...</Text> 
         }
+        else if (error){
+            listContent = (
+                    <View style={styles.errorContainer}>
+                        <Text style={styles.text}>{error}</Text>
+                        <View style={styles.btn}>
+                            <Pressable style={styles.btnPressable} onPress={retrieveContacts}>
+                                <Text style={styles.errorText}>Fetch</Text>        
+                            </Pressable>
+                        </View>
+                    </View>
+            )
+        }
         else if(searchQuery){
             const filteredContacts = contacts.filter(contact => {
                 return contact.name.toLowerCase().includes(searchQuery.toLowerCase())
             })
             if (filteredContacts.length === 0){
-                listContent =  <Text style={styles.errorText}>No Contacts Match Your Search Query...</Text>
+                listContent =  <Text style={styles.text}>No Contacts Match Your Search Query...</Text>
             }
             else{
                 listContent = <FlatList
@@ -73,9 +88,24 @@ const styles = StyleSheet.create({
     list: {
         width: "100%"
     },
-    errorText: {
+    text: {
         fontSize: 15,
         textAlign: "center"
+    },
+    errorText: {
+        fontSize: 17
+    },
+    errorContainer: {
+        alignItems: "center"
+    },
+    btnPressable: {
+        paddingVertical: 8,
+        paddingHorizontal: 20
+    },
+    btn: {
+        backgroundColor: "#c64c38",
+        borderRadius: 12,
+        marginTop: 20
     }
 })
 

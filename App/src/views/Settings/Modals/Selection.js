@@ -1,17 +1,15 @@
 import { Pressable, View, Text, StyleSheet} from "react-native";
 
-const DepartmentSelection = ({department, setSelected, setDropDownOpen}) => {
+const Selection = ({selection, setSelected, setDropDownOpen}) => {
     const pressHandler = () => {
-        setSelected(department);
+        setSelected(selection);
         setDropDownOpen(false)
     }
-    
-
 
     return (
         <View style={styles.selection}>
             <Pressable style={styles.selectionBtn} onPress={pressHandler}>
-                <Text style={styles.selectionText}>{department}</Text>
+                <Text style={styles.selectionText}>{selection}</Text>
             </Pressable>
         </View>
     )
@@ -31,4 +29,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default DepartmentSelection;
+export default Selection;
