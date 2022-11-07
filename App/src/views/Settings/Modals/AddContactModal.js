@@ -1,5 +1,6 @@
 import { useState, useReducer } from "react";
 import  useHttp from "../../../hooks/usehttp";
+import { titleCase } from "../../../constants/utility";
 import { formReducer, formInitialState} from "./Reducers/formReducer";
 import { StyleSheet, Modal, View, Text, ScrollView, Pressable} from "react-native";
 import DropDown from "./DropDown";
@@ -7,6 +8,8 @@ import { Icon } from "react-native-elements";
 import InputField from "./InputField";
 import ModalButton from "./ModalButton";
 import { DEPARTMENTS } from "../../../constants/constants";
+
+
 
 const AddContactModal = ({isVisible, setIsVisible}) => {
     const [state, dispatch] = useReducer(formReducer, formInitialState);
@@ -30,6 +33,11 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
         if(cannotSubmit){ 
             return;
         }
+        const fullName = titleCase(state.firstName.value + " " + state.lastName.value)
+        const street = titleCase(state.street.value);
+        const suburb = titleCase(state.suburb.value);
+        const country = titleCase(state.country.value);
+
         sendRequest({
             url: "http://192.168.1.93:5000/contacts",
             method: "POST",
@@ -37,15 +45,14 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
                 "Content-Type": "application/json",
             },
             body: {
-                firstName: state.firstName.value,
-                lastName: state.lastName.value,
-                department: state.department.value,
+                fullName,
+                department: DEPARTMENTS.findIndex(department => department === state.department.value),
                 phone: state.phone.value,
-                street: state.street.value,
-                suburb: state.suburb.value,
-                state: state.state.value,
+                street,
+                suburb,
+                state: state.state.value.toUpperCase(),
                 postCode: state.postCode.value,
-                country: state.country.value
+                country
             }
         }, (data) => {
             console.log(data);
