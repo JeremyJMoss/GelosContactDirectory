@@ -47,15 +47,12 @@ const styles = StyleSheet.create({
         top: -65,
         zIndex: 1,
         left: 20,
-        height: 40,
-        width: 40,
         borderRadius: 20,
         alignItems: "center",
         justifyContent: "center"
     },
     pressableSurface: {
-        height: "100%",
-        width: "100%"
+        padding: 10
     },
     container: {
         padding: 15,

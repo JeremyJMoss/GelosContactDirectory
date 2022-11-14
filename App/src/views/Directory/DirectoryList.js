@@ -5,6 +5,7 @@ import { contactActions } from "../../../store/contacts";
 import { useFocusEffect } from '@react-navigation/native';
 import Contact from "./Contact";
 import useHttp from "../../hooks/usehttp";
+import { BASE_URL } from "../../constants/constants";
 
 const DirectoryList = ({searchQuery}) => {
     const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const DirectoryList = ({searchQuery}) => {
 
     const retrieveContacts = () => {
         sendRequest({
-            url: "http://192.168.1.93:5000/contacts"
+            url: `${BASE_URL}contacts`
         }, (data) => {
             dispatch(contactActions.setContacts(data));
         })
@@ -28,7 +29,7 @@ const DirectoryList = ({searchQuery}) => {
     let listContent;
 
         if (isLoading){
-           listContent = <Text>Loading...</Text> 
+           listContent = <Text style={styles.text}>Loading...</Text> 
         }
         else if (error){
             listContent = (
@@ -44,7 +45,15 @@ const DirectoryList = ({searchQuery}) => {
         }
         else if(searchQuery){
             const filteredContacts = contacts.filter(contact => {
-                return contact.name.toLowerCase().includes(searchQuery.toLowerCase())
+                const contactNames = contact.name.toLowerCase().split(" ");
+                let includeName = false;
+                for (let name of contactNames) {
+                    includeName = name.slice(0, searchQuery.length) === searchQuery.toLowerCase();
+                    if (includeName){
+                        return true;
+                    }
+                };
+                return false
             })
             if (filteredContacts.length === 0){
                 listContent =  <Text style={styles.text}>No Contacts Match Your Search Query...</Text>
@@ -70,7 +79,9 @@ const DirectoryList = ({searchQuery}) => {
             keyExtractor={(contact) => contact.id}
             />
         }
-
+        if (!contacts){
+            listContent = <Text>No Contacts Found...</Text>
+        }
 
     return (
         <View style={styles.listView}>

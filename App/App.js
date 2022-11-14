@@ -66,7 +66,8 @@ export default function App() {
             component={Directory} />
             <Tab.Screen 
             name="Departments" 
-            component={Departments} />
+            component={Departments} 
+            />
             <Tab.Screen 
             name="Settings"
             component={Settings} />

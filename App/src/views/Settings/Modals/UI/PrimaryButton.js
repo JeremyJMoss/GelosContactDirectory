@@ -1,10 +1,10 @@
 import { StyleSheet, View, Pressable, Text } from "react-native";
 
-const ModalButton = ({style, pressHandler, buttonText}) => {
+const PrimaryButton = ({textColor, style, pressHandler, buttonText, pressableSurface}) => {
     return (
         <View style={[styles.btn, style]}>
-            <Pressable onPress={pressHandler} style={styles.pressableSurface} android_ripple={{color: "#d9d9d9"}}>
-                <Text style={styles.btnText}>{buttonText}</Text>
+            <Pressable onPress={pressHandler} style={pressableSurface} android_ripple={{color: "#d9d9d9"}}>
+                <Text style={[styles.btnText, textColor]}>{buttonText}</Text>
             </Pressable>   
         </View>
     )
@@ -17,20 +17,17 @@ const styles = StyleSheet.create({
         flexDirection: "row"  
     },
     btn: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         borderWidth: 1,
-        flex: 1,
-        maxWidth: 100,
         borderRadius: 20,
         overflow: "hidden"
-    },
-    pressableSurface: {
-        paddingVertical: 10,
-        paddingHorizontal: 15,
     },
     btnText: {
         fontSize: 17,
         fontWeight: "bold",
-        textAlign: "center"
+        textAlign: "center",
     },
 })
-export default ModalButton;
+export default PrimaryButton;

@@ -1,18 +1,18 @@
 class Contact{
-    constructor(id, name, phoneNumber, department, street, city, state, postCode, country){
+    constructor(id, name, phone, department, street, suburb, state, postCode, country){
         this.id = id;
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
         this.department = department;
         this.street = street;
-        this.city = city;
+        this.suburb = suburb;
         this.state = state;
         this.postCode = postCode;
         this.country = country;
     }
 
     toString() {
-        const joiningArray = [this.id, this.name, this.phoneNumber, this.department, this.street, this.suburb, this.state, this.postCode, this.country];
+        const joiningArray = [this.id, this.name, this.phone, this.department, this.street, this.suburb, this.state, this.postCode, this.country];
         return joiningArray.join(","); 
     }
 }

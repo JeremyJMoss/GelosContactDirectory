@@ -1,27 +1,27 @@
 import { StyleSheet, View } from "react-native";
 import SettingsButton from "./SettingsButton";
 import { useState } from "react";
-import AddContactModal from "./Modals/AddContactModal";
-import EditContactModal from "./Modals/EditContactModal";
+import ContactFormModal from "./Modals/ContactFormModel";
+import EditContactList from "./Modals/EditContactList";
 
 const Settings = () => {
-    const [addContactModalOpen, setAddContactModalOpen] = useState(false);
-    const [editContactModalOpen, setEditContactModalOpen] = useState(false);
+    const [contactModalOpen, setContactModalOpen] = useState(false);
+    const [editContactListOpen, setEditContactListOpen] = useState(false);
     
-    const openAddContactModalHandler = () => {
-        setAddContactModalOpen(true);
+    const openContactModalHandler = () => {
+        setContactModalOpen(true);
     }
 
-    const openEditContactModalHandler = () => {
-        setEditContactModalOpen(true);
-    } 
+    const openEditContactListHandler = () => {
+        setEditContactListOpen(true);
+    }
     
     return (
         <View style={styles.container}>
-            <SettingsButton settingsTitle="Add New Contact" pressHandler={openAddContactModalHandler}/>
-            <SettingsButton settingsTitle="Edit Existing Contact" pressHandler={openEditContactModalHandler}/>
-            <AddContactModal setIsVisible={setAddContactModalOpen} isVisible={addContactModalOpen}/>
-            <EditContactModal isVisible={editContactModalOpen}/>
+            <SettingsButton settingsTitle="Add New Contact" pressHandler={openContactModalHandler}/>
+            <SettingsButton settingsTitle="Edit Existing Contact" pressHandler={openEditContactListHandler}/>
+            <ContactFormModal setIsVisible={setContactModalOpen} isVisible={contactModalOpen} editing={false}/>
+            <EditContactList setIsVisible={setEditContactListOpen} isVisible={editContactListOpen}/>
         </View>
     )   
 }

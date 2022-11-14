@@ -6,9 +6,9 @@ import { Icon } from "react-native-elements";
 const Contact = ({contactInfo}) => {
     const [detailsOpen, setDetailsOpen] = useState(false);
 
-    const formattedPhoneNumber = `${contactInfo.phoneNumber.slice(0, 2)} ${contactInfo.phoneNumber.slice(2, 6)} ${contactInfo.phoneNumber.slice(6, 10)}`
+    const formattedPhoneNumber = `${contactInfo?.phone.slice(0, 4)} ${contactInfo?.phone.slice(4, 7)} ${contactInfo?.phone.slice(7, 10)}`
     
-    const formattedAddress = `${contactInfo.street}, ${contactInfo.city}, ${contactInfo.state}, ${contactInfo.country}, ${contactInfo.postCode}`
+    const formattedAddress = `${contactInfo?.street}, ${contactInfo?.suburb}, ${contactInfo?.state}, ${contactInfo?.country}, ${contactInfo?.postCode}`
 
     const pressHandler = () => {
         setDetailsOpen((state) => !state)
@@ -18,7 +18,7 @@ const Contact = ({contactInfo}) => {
             <View style={styles.contact}>
                 <Pressable style={styles.btnView} onPress={pressHandler} android_ripple={{color: "#eeeeee", borderless: true}}>
                     <View style={styles.contactNameContainer}>
-                        <Text style={styles.contactText}>{contactInfo.name}</Text>
+                        <Text style={styles.contactText}>{contactInfo?.name}</Text>
                         {detailsOpen ? <Icon type="font-awesome" name="angle-up" style={styles.icon}/> : <Icon type="font-awesome" name="angle-down" style={styles.icon}/>}
                     </View>
                     {detailsOpen && 
@@ -31,7 +31,7 @@ const Contact = ({contactInfo}) => {
                                     </Text>
                                 </View>
                                 <View style={styles.info}>
-                                    <Text>
+                                    <Text style={styles.infoText}>
                                         {formattedPhoneNumber}
                                     </Text>
                                 </View>
@@ -43,7 +43,7 @@ const Contact = ({contactInfo}) => {
                                     </Text>
                                 </View>
                                 <View style={styles.info}>
-                                    <Text>
+                                    <Text style={styles.infoText}>
                                         {DEPARTMENTS[contactInfo.department]}
                                     </Text>
                                 </View>
@@ -57,7 +57,7 @@ const Contact = ({contactInfo}) => {
                                     </Text>
                                 </View>
                                 <View style={styles.info}>
-                                    <Text>
+                                    <Text style={styles.infoText}>
                                         {formattedAddress}
                                     </Text>
                                 </View>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     infoTextHeader: {
-        fontSize: 15,
+        fontSize: 18,
         fontWeight: "bold",
         color: "#262626"
     },
@@ -104,6 +104,10 @@ const styles = StyleSheet.create({
     contactNameContainer: {
         flexDirection: "row",
         justifyContent: "space-between"
+    },
+    infoText: {
+        textAlign: "center",
+        fontSize: 16
     }
 })
 

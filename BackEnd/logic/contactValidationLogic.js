@@ -10,7 +10,6 @@ const isFullName = (input) => {
 }
 
 const isNan = (input) => {
-    console.log(input);
     const testNum = Number(input);
     return isNaN(testNum);
 }
@@ -23,7 +22,6 @@ const isValidDepartment = (input) => {
 }
 
 const isValidPostCode = (input) => {
-    console.log(input);
     return input.match(/^\d{4}$/);
 }
 
@@ -44,7 +42,7 @@ const  validateContact = (contact) => {
     if (!isFullName(contact.name)){
         return "First name and Last Name must be included";
     }
-    if (isNan(contact.phoneNumber)){
+    if (isNan(contact.phone)){
         return "Please enter valid phone number";
     }
     if (!isValidDepartment(contact.department)){
@@ -59,7 +57,7 @@ const  validateContact = (contact) => {
     if (!isFromAustralia(contact.country)){
         return "Contact Directory does not contain entries out of Australia";
     }
-    return "All Values OK"
+    return "OK"
 }
 
 module.exports = validateContact;

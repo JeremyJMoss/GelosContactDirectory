@@ -1,6 +1,6 @@
 import {View, Pressable, Text, StyleSheet} from "react-native";
 
-const Department = ({id, department, selectDepartment, setContactListOpen}) => {
+const Department = ({department, selectDepartment, setContactListOpen}) => {
     return(
         <View style={styles.button}>
             <Pressable 

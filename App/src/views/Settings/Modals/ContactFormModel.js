@@ -3,18 +3,22 @@ import  useHttp from "../../../hooks/usehttp";
 import { titleCase } from "../../../constants/utility";
 import { formReducer, formInitialState} from "./Reducers/formReducer";
 import { StyleSheet, Modal, View, Text, ScrollView, Pressable} from "react-native";
-import DropDown from "./DropDown";
+import DropDown from "./UI/DropDown";
 import { Icon } from "react-native-elements";
-import InputField from "./InputField";
-import ModalButton from "./ModalButton";
-import { DEPARTMENTS } from "../../../constants/constants";
+import InputField from "./UI/InputField";
+import PrimaryButton from "./UI/PrimaryButton";
+import ContactMessage from "./UI/ContactMessage";
+import { contactActions } from "../../../../store/contacts";
+import { DEPARTMENTS, BASE_URL } from "../../../constants/constants";
+import { useDispatch } from "react-redux";
 
-
-
-const AddContactModal = ({isVisible, setIsVisible}) => {
-    const [state, dispatch] = useReducer(formReducer, formInitialState);
+const ContactFormModal = ({isVisible, setIsVisible, contactToEdit, editing}) => {
+    const [state, dispatch] = useReducer(formReducer, formInitialState(contactToEdit));
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const dispatchContacts = useDispatch();
+    // custom hook to manage http request
     const {isLoading, error, setError, sendRequest} = useHttp();
+    const [contact, setContact] = useState(null);
 
     // checking all error states of state
     const cannotSubmit = Object.values(state).some(field => {
@@ -25,10 +29,12 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
         setIsVisible(false);
         setHasSubmitted(false);
         setError(null);
-        dispatch({type: "RESET_FORM"})
+        setContact(null);
+        dispatch({type: "RESET_FORM"});
     }
 
     const submitModalHandler = () => {
+        setError(null);
         setHasSubmitted(true);
         if(cannotSubmit){ 
             return;
@@ -39,8 +45,8 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
         const country = titleCase(state.country.value);
 
         sendRequest({
-            url: "http://192.168.1.93:5000/contacts",
-            method: "POST",
+            url: `${BASE_URL}contacts${editing ? `?id=${contactToEdit.id}` : ""}`,
+            method: editing ? "PUT" : "POST",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -54,9 +60,15 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
                 postCode: state.postCode.value,
                 country
             }
-        }, (data) => {
-            console.log(data);
-            dispatch({type: "RESET_FORM"})    
+        }, (updatedContact) => {
+            sendRequest({
+                url: `${BASE_URL}contacts`
+            }, (data) => {
+                dispatchContacts(contactActions.setContacts(data));
+                setContact(updatedContact);
+                dispatch({type: "RESET_FORM"})
+            })
+                
         })
         setHasSubmitted(false);
     }
@@ -73,19 +85,24 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
         <Modal visible={isVisible} transparent={true}>   
             <View style={styles.modalBackground}>
                 <View style={styles.contactFormContainer}>
+                    {contact && !error && (
+                        <ContactMessage
+                        contact={contact}
+                        containerStyle={styles.container}
+                        pressHandler={hideModalHandler}
+                        editing={editing} 
+                        />
+                    )}
                     {isLoading && !error && (
-                        <View>
+                        <View style={styles.container}>
                             <Text>Sending Request...</Text>
                         </View>
                     )}
                     {error && (
-                        <View style={styles.errorContainer}>
+                        <View style={styles.container}>
                             <Text>{error}</Text>
                             <View style={styles.btnRetry}>
-                                <Pressable style={styles.btnRetryPressable} onPress={() => {
-                                    setError(null);
-                                    submitModalHandler()
-                                }}>
+                                <Pressable style={styles.btnRetryPressable} onPress={submitModalHandler}>
                                     <View style={styles.textContainer}>
                                         <Text style={styles.btnText}>Retry </Text>
                                         <Icon type="font-awesome" name="rotate-right"/>
@@ -93,9 +110,7 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
                                 </Pressable>
                             </View>
                             <View style={styles.btnRetry}>
-                                <Pressable style={styles.btnRetryPressable} onPress={() => {
-                                    hideModalHandler();
-                                }}>
+                                <Pressable style={styles.btnRetryPressable} onPress={hideModalHandler}>
                                     <View style={styles.textContainer}>
                                         <Text style={styles.btnText}>Close</Text>
                                     </View>
@@ -103,10 +118,10 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
                             </View>
                         </View>
                     )}
-                    {!isLoading && !error && (
+                    {!isLoading && !error && !contact && (
                     <ScrollView>    
                         <View style={styles.headerContainer}>
-                            <Text style={styles.formHeader}>Add New Contact</Text>
+                            <Text style={styles.formHeader}>{`${editing ? "Edit" : "Add"} Contact`}</Text>
                         </View>
                         <InputField 
                         fieldName="First Name" 
@@ -179,15 +194,17 @@ const AddContactModal = ({isVisible, setIsVisible}) => {
                         hasSubmitted={hasSubmitted}
                         />
                         <View style={styles.btnContainer}>
-                            <ModalButton 
+                            <PrimaryButton 
                             pressHandler={submitModalHandler} 
                             buttonText="Submit" 
                             style={styles.submit}
+                            pressableSurface={styles.pressableSurface}
                             />
-                            <ModalButton 
+                            <PrimaryButton 
                             pressHandler={hideModalHandler} 
                             buttonText="Cancel" 
                             style={styles.cancel}
+                            pressableSurface={styles.pressableSurface}
                             />
                         </View>
                     </ScrollView>
@@ -271,12 +288,16 @@ const styles= StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center"
     },
-    errorContainer : {
+    container : {
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
-        width: "100%"
+        width: "100%",
+    },
+    pressableSurface: {
+        paddingVertical: 10,
+        paddingHorizontal: 15
     }
 })
 
-export default AddContactModal;
+export default ContactFormModal;
