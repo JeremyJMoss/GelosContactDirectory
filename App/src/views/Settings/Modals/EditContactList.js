@@ -102,7 +102,7 @@ const openContactFormHandler = (contact) => {
                             }
                             {error && 
                                 <View style={styles.loadingContainer}>
-                                    <Text style={styles.infoText}>{error}</Text>
+                                    <Text style={styles.infoText}>{error.split(",")[1]}</Text>
                                     <View style={styles.buttonContainer}>
                                         <View style={styles.btnRetry}>
                                             <Pressable style={styles.btnRetryPressable} onPress={deleteHandler}>

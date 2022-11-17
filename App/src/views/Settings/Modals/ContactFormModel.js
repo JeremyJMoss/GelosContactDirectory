@@ -11,6 +11,7 @@ import ContactMessage from "./UI/ContactMessage";
 import { contactActions } from "../../../../store/contacts";
 import { DEPARTMENTS, BASE_URL } from "../../../constants/constants";
 import { useDispatch } from "react-redux";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 
 const ContactFormModal = ({isVisible, setIsVisible, contactToEdit, editing}) => {
     const [state, dispatch] = useReducer(formReducer, formInitialState(contactToEdit));
@@ -100,9 +101,9 @@ const ContactFormModal = ({isVisible, setIsVisible, contactToEdit, editing}) => 
                     )}
                     {error && (
                         <View style={styles.container}>
-                            <Text>{error}</Text>
+                            <Text style={styles.infoText}>{error.split(",")[1]}</Text>
                             <View style={styles.btnRetry}>
-                                <Pressable style={styles.btnRetryPressable} onPress={submitModalHandler}>
+                                <Pressable style={styles.btnRetryPressable} onPress={error.split(",")[0] != 400 ? submitModalHandler : () => setError(null)}>
                                     <View style={styles.textContainer}>
                                         <Text style={styles.btnText}>Retry </Text>
                                         <Icon type="font-awesome" name="rotate-right"/>
@@ -297,6 +298,11 @@ const styles= StyleSheet.create({
     pressableSurface: {
         paddingVertical: 10,
         paddingHorizontal: 15
+    },
+    infoText: {
+        textAlign: "center",
+        fontSize: 17,
+        marginBottom: 30
     }
 })
 

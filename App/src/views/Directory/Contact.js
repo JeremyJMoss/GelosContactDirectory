@@ -71,7 +71,6 @@ const Contact = ({contactInfo}) => {
 
 const styles = StyleSheet.create({
     contact: {
-        flex: 1,
         backgroundColor: "#d9d9d9",
         borderRadius: 10,
         marginBottom: 10

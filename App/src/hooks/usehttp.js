@@ -31,7 +31,7 @@ const useHttp = function(){
                 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.message);
+                throw new Error(`${response.status},${error.message}`);
             }
 
             const data = await response.json();

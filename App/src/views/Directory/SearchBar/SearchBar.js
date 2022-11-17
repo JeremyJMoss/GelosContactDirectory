@@ -17,7 +17,6 @@ const SearchBar = ({searchQuery, setSearchQuery}) => {
 
 const styles = StyleSheet.create({
     inputContainer: {
-        flex: 1,
         padding: 10,
         flexDirection: "row",
         alignItems: "center"
@@ -26,9 +25,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 20,
         borderWidth: 1,
-        margin: 12,
         flex: 6,
-        fontSize: 15
+        margin: 12,
+        fontSize: 15,
     }
 })
 

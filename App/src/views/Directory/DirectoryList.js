@@ -79,10 +79,7 @@ const DirectoryList = ({searchQuery}) => {
             keyExtractor={(contact) => contact.id}
             />
         }
-        if (!contacts){
-            listContent = <Text>No Contacts Found...</Text>
-        }
-
+        
     return (
         <View style={styles.listView}>
             {listContent}
