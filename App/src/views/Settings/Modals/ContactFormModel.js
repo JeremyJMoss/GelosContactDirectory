@@ -11,7 +11,6 @@ import ContactMessage from "./UI/ContactMessage";
 import { contactActions } from "../../../../store/contacts";
 import { DEPARTMENTS, BASE_URL } from "../../../constants/constants";
 import { useDispatch } from "react-redux";
-import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 
 const ContactFormModal = ({isVisible, setIsVisible, contactToEdit, editing}) => {
     const [state, dispatch] = useReducer(formReducer, formInitialState(contactToEdit));
