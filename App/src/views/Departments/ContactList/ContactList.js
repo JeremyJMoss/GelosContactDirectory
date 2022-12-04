@@ -35,7 +35,7 @@ const ContactList = ({setContactListOpen, department}) => {
                 keyExtractor={(contact) => {
                     return contact.id
                 }}/> :
-                <Text style={styles.errorText}>No Contacts for this department...</Text>}
+                <Text style={styles.errorText}>No Contacts found belonging to this department...</Text>}
             </View>            
         </>
     )
